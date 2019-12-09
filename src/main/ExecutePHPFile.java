@@ -30,12 +30,14 @@ public class ExecutePHPFile {
 		 StringBuilder output = new StringBuilder();
 		    try {
 				String line;
-				Process p = Runtime.getRuntime().exec("php -f "+config.ROOT_DIRECTORY+fileRequested);
+				Process p = Runtime.getRuntime().exec("php -f"+config.ROOT_DIRECTORY+fileRequested);
 				BufferedReader inputPHP = new BufferedReader (new InputStreamReader(p.getInputStream()));
 				while ((line = inputPHP.readLine()) != null) {
+					System.out.println(inputPHP.readLine());
 					output.append(line);
 				}
 				inputPHP.close();
+				System.out.println(output.toString());
 	    	}
 		    catch (Exception err) {
 		    	err.printStackTrace();

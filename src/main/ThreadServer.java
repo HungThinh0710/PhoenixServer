@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -64,6 +65,7 @@ public class ThreadServer extends Thread{
 			System.out.println("requested_now_fist " + fileRequested);
 
 			// REMOTING default typefile
+			String fileRequestedStock = fileRequested;//FileRequestTestStock;
 			String fileRouted = utils.routingDefaultTypeFile(fileRequested);
 			if(fileRouted!=null) 
 				fileRequested = fileRouted;
@@ -118,10 +120,88 @@ public class ThreadServer extends Thread{
 //					if(content.equals("text/html")) {
 					if(fileRequested.endsWith(".php")) {
 						 try {
-							    ExecutePHPFile php = new ExecutePHPFile();
-							    int phpLength = php.getPHPLength(fileRequested);
-							    byte [] phpData = php.executePHP(fileRequested);
-							   
+////							    ExecutePHPFile php = new ExecutePHPFile();
+////							    int phpLength = php.getPHPLength(fileRequested);
+////							    byte [] phpData = php.executePHP(fileRequested);
+//							 StringBuilder output = new StringBuilder();
+//							    byte[] phpData = null ;
+//							    int phpLength = 0;
+//							    try {
+//									String line;
+//
+////								    filePHPData = output.toString().getBytes();
+//									
+//									
+//									String fileRequestedFiltedSplash = fileRequested.replace("/", "\\");
+////									String cmdExecPhp = "cmd /c D: cd D:\\Eclipse_newgen\\PhoenixServer\\ && php -f "+fileRequestedFiltedSplash;
+//									String cmdExecPhp = "cmd /c D: && cd D:\\Eclipse_newgen\\PhoenixServer\\phpmyadmin && php index.php";
+//									Process p = Runtime.getRuntime().exec(new String[]{"p","D:\\Eclipse_newgen\\PhoenixServer\\phpmyadmin\\index.php", "-m", "2"});
+////									Process p = Runtime.getRuntime().exec(cmdExecPhp);
+//									System.out.println(cmdExecPhp);
+//									p.waitFor();
+//									BufferedReader inputPHP = new BufferedReader (new InputStreamReader(p.getInputStream()));
+//									while ((line = inputPHP.readLine()) != null) {
+//										System.out.println(inputPHP.readLine());
+//										output.append(line);
+//									}
+//									inputPHP.close();
+//									
+//									System.out.println(output.toString());
+//
+//							        
+//						    	}
+//							    catch (Exception err) {
+//							    	err.printStackTrace();
+//							    }
+							 StringBuilder outPHPData = new StringBuilder();
+
+							 try {
+						            /* Create process */
+						            Process p = Runtime.getRuntime().exec("cmd /c D: && cd D:\\Eclipse_newgen\\PhoenixServer\\phpmyadmin && php -f index.php");
+
+						            /* Get OuputStream */
+						            PrintWriter writer = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(p.getOutputStream())), true);
+						            
+						            /* Read the output of command prompt */
+						            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+						            String line = reader.readLine();
+						            /* Read upto end of execution */
+						            while (line != null) {
+						                /* Pass the value to command prompt/user input */
+						                writer.println("");
+						                System.out.println(line);
+						                line = reader.readLine();
+						                outPHPData.append(reader.readLine());
+						            }
+						            /* The stream obtains data from the standard output stream of the process represented by this Process object. */
+						            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+						            /* The stream obtains data from the error output stream of the process represented by this Process object. */
+						            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+						            System.err.println(stdInput);
+						            System.err.println(stdError);
+						            System.err.println(outPHPData.length());
+						            String Input;
+						            while ((Input = stdInput.readLine()) != null) {
+						                System.out.println(Input);
+						            }            
+						            
+						            String Error;
+						            while ((Error = stdError.readLine()) != null) {
+						                System.out.println(Error);
+						            }
+						            
+						        } catch (Exception e) {
+						            e.printStackTrace();
+						        }
+							 
+							 
+							 
+							 
+							 	int phpLength = outPHPData.length();
+							 	byte [] phpData = new byte [outPHPData.length()];
+							 	phpData = outPHPData.toString().getBytes();
+							 
+							 
 						        out.println("HTTP/1.1 200 OK");
 								out.println("Server: PServer from Hung Thinh - SICT: v1.0");
 								out.println("Date: " + new Date());

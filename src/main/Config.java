@@ -21,6 +21,15 @@ public class Config {
 	protected static final int DEFAULT_PORT = 80;
 	
 	
+	//COMMAND CONFIG
+	public static final File COMMAND_DIR = new File("./command");
+	public static final String MYSQL_START_BAT_FILE = COMMAND_DIR+"\\mysql_start.bat";
+	public static final String MYSQL_STOP_BAT_FILE = COMMAND_DIR+"\\mysql_stop.bat";
+	
+	//MYSQL CONFIG
+	public static final File MYSQL_DIR = new File("/mysql");
+	public static final String MYSQL_CONFIG_FILE = "D:\\Eclipse_newgen\\PhoenixServer\\mysql\\bin\\my.ini";
+	
 	public static final int PORT = 80;
 	// verbose mode
 	public static final boolean verbose = true;
@@ -113,6 +122,7 @@ public class Config {
 		try {
 			Ini ini = new Ini();
         	ini.load(new FileReader(INI_FOLDER_PATH+CONFIG_INI_PSERVER_FILE_NAME));
+        	System.out.println(INI_FOLDER_PATH+CONFIG_INI_PSERVER_FILE_NAME);
         	Ini.Section pServerIni = ini.get("PServer");
         	port = Integer.parseInt(pServerIni.get("Port"));
         	return port;
@@ -136,12 +146,28 @@ public class Config {
 		}
 	}
 	
-//	public static void main(String args[]) {
+	
+	public static int getPortMySQLINI() {
+		int port = 0;
+		try {
+			Ini mySQLini = new Ini();
+			mySQLini.load(new FileReader(MYSQL_CONFIG_FILE));
+        	Ini.Section mySQLIni = mySQLini.get("mysqld");
+        	port = Integer.parseInt(mySQLIni.get("port"));
+        	return port;
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+			return port;
+		}
+	}
+	public static void main(String args[]) {
 //		initialConfigFolder();
 //		createINIConfigrationFile();
 ////		restoreDefaultCfgData();
 //		changePortPServerINI(80);
 //		System.out.println(getPortPServerINI());
 //	
-//	}
+//		System.out.println(getPortMySQLINI());
+	}
 }

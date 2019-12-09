@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -29,6 +30,7 @@ import javax.swing.border.TitledBorder;
 
 import exception.PortIsNotAvailableException;
 import main.Config;
+import main.MySQL;
 import main.PServer;
 import main.ThreadServer;
 import main.Utils;
@@ -39,10 +41,15 @@ public class Launcher<V> extends JFrame {
 
 	private JPanel contentPane;
 	public static JButton btnStartPServer;
+	private JButton btnStartMySQL;
+	
 	private JTextArea txtConsole;
 	private JLabel lblPortOfPServer;
 	private JLabel lblPidOfPServer;
 	private JLabel lblPserver;
+	private JLabel lblPidOfMySql;
+	private JLabel lblPortOfMySQL;
+	private JLabel lblMySql;
 	/**
 	 * Init Pserver variable.
 	 */
@@ -111,7 +118,7 @@ public class Launcher<V> extends JFrame {
 		lblPserver.setBounds(10, 45, 85, 13);
 		panelModule.add(lblPserver);
 		
-		JLabel lblMySql = new JLabel("MySQL");
+		lblMySql = new JLabel("MySQL");
 		lblMySql.setHorizontalAlignment(SwingConstants.CENTER);
 		lblMySql.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblMySql.setBounds(10, 91, 85, 13);
@@ -140,7 +147,7 @@ public class Launcher<V> extends JFrame {
 		lblPidOfPServer.setBounds(10, 45, 85, 13);
 		panel_PID.add(lblPidOfPServer);
 		
-		JLabel lblPidOfMySql = new JLabel("");
+		lblPidOfMySql = new JLabel("");
 		lblPidOfMySql.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPidOfMySql.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblPidOfMySql.setBounds(10, 91, 85, 13);
@@ -170,7 +177,7 @@ public class Launcher<V> extends JFrame {
 		lblPortOfPServer.setBounds(10, 45, 85, 13);
 		panelPort.add(lblPortOfPServer);
 		
-		JLabel lblPortOfMySQL = new JLabel("");
+		lblPortOfMySQL = new JLabel("");
 		lblPortOfMySQL.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPortOfMySQL.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblPortOfMySQL.setBounds(10, 91, 85, 13);
@@ -234,25 +241,35 @@ public class Launcher<V> extends JFrame {
 		btnConfigOfPServer.setBounds(176, 36, 73, 21);
 		panel_1.add(btnConfigOfPServer);
 		
-		JButton button = new JButton("Start");
-		button.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		button.setBounds(10, 85, 73, 21);
-		panel_1.add(button);
+		btnStartMySQL = new JButton("Start");
+		btnStartMySQL.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					startMySQLHandle();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		btnStartMySQL.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnStartMySQL.setBounds(10, 85, 73, 21);
+		panel_1.add(btnStartMySQL);
 		
-		JButton button_1 = new JButton("Access");
-		button_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		button_1.setBounds(93, 85, 73, 21);
-		panel_1.add(button_1);
+		JButton btnAccessMySql = new JButton("Access");
+		btnAccessMySql.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnAccessMySql.setBounds(93, 85, 73, 21);
+		panel_1.add(btnAccessMySql);
 		
-		JButton button_2 = new JButton("Config");
-		button_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		button_2.setBounds(176, 85, 73, 21);
-		panel_1.add(button_2);
+		JButton btnConfigMySql = new JButton("Config");
+		btnConfigMySql.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnConfigMySql.setBounds(176, 85, 73, 21);
+		panel_1.add(btnConfigMySql);
 		
-		JButton button_3 = new JButton("Logs");
-		button_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		button_3.setBounds(259, 85, 69, 21);
-		panel_1.add(button_3);
+		JButton btnLogsMySQL = new JButton("Logs");
+		btnLogsMySQL.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnLogsMySQL.setBounds(259, 85, 69, 21);
+		panel_1.add(btnLogsMySQL);
 		
 		JButton button_4 = new JButton("Start");
 		button_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -420,9 +437,87 @@ public class Launcher<V> extends JFrame {
 		pServer.stopPServer();
 	}
 	
+	
+	private void startMySQLHandle() throws InterruptedException {
+		MySQL mySql = new MySQL();
+		Thread startMySQL = new Thread() {
+			@Override
+			public void run() {
+				try {
+					txtConsole.append("["+ getCurrentTime() +"] "+"[MySql]"+"Attempting to start MySQL app...\n");
+					mySql.startMYSQL();
+				}catch (PortIsNotAvailableException error) {
+					btnStartMySQL.setText("Start");
+					lblPidOfMySql.setText("");
+					lblPortOfMySQL.setText("");
+					btnStartMySQL.setEnabled(true);
+					txtConsole.append("["+ getCurrentTime() +"] "+ "[MySql][ERROR] "+error.getMessage()+" \n");
+					error.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		Thread stopThread = new Thread() {
+			@Override
+			public void run() {
+				try {
+					mySql.stopMYSQL();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		
+		if(btnStartMySQL.getText().equals("Start")) {
+			startMySQL.start();
+			
+			//Change status of views
+			
+			int portMySql = Config.getPortMySQLINI();
+//			int pidMySql = mySql.getMySQLPid(portMySql);
+			
+			lblPortOfMySQL.setText(String.valueOf(portMySql));
+//			Thread.sleep(3000);
+//			lblPidOfMySql.setText(String.valueOf(mySql.getMySQLPid(Config.getPortMySQLINI())));
+			btnStartMySQL.setText("Stop");
+			lblMySql.setForeground(new Color(255, 215, 0));
+			lblMySql.setForeground(new Color(0, 128, 0));
+			txtConsole.append("["+ getCurrentTime() +"] "+ "[MySql]"+ "MySql is running. \n");
+			return;
+		}
+		if(btnStartMySQL.getText().equals("Stop")) {
+			
+			txtConsole.append("["+ getCurrentTime() +"] "+"[MySql]"+"Attempting to stop MySql app...\n");
+//			TimeUnit.SECONDS.sleep(3);
+//			Thread.sleep(3000);
+//			mySql.stopMYSQL();
+			stopThread.start();
+			//Change status of views
+
+			txtConsole.append("["+ getCurrentTime() +"] "+ "[MySql]"+ "MySql has been stopped. \n");
+			lblMySql.setForeground(new Color(0, 0, 0));
+			lblPortOfMySQL.setText("");
+			lblPidOfMySql.setText("");
+			btnStartMySQL.setText("Start");
+			return;
+		}
+	}
+	
 	private String getCurrentTime() {
 		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");  
 	    Date date = new Date();  
 	    return String.valueOf(formatter.format(date));
+	}
+	private void delay(Long ms){
+		Long dietime = System.currentTimeMillis()+ms;
+		while(System.currentTimeMillis()<dietime){
+			//do nothing   
+		}
 	}
 }

@@ -1,2 +1,6 @@
 mysql/
 php/
+php73/
+phpmyadmin/
+tmp/
+go-pear.phar
