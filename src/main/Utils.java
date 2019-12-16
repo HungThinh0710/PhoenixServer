@@ -34,7 +34,6 @@ public class Utils{
 	
 	// return supported MIME Types
 	public String getContentType(String fileRequested) {
-		
 		if (fileRequested.endsWith(".htm")  ||  fileRequested.endsWith(".html"))
 			return "text/html";
 		if(fileRequested.endsWith(".aac"))
@@ -244,7 +243,7 @@ public class Utils{
 				String [] typeFiles = {"index.php","home.php","default.php","index.html","index.htm","home.html","home.htm","default.html","default.htm"}; 
 				for (int i = 0; i < typeFiles.length; i++) {
 					if(!fileRequested.endsWith(".html")) {
-						file = new File(Config.ROOT_DIRECTORY,fileRequested+"/"+typeFiles[i]);
+						file = new File(Config.getPathRootPServerINI(),fileRequested+"/"+typeFiles[i]);
 						if(file.isFile()) {
 							if(String.valueOf(fileRequested.charAt(fileRequested.length() -1)).equals("/")){
 								strReturn = fileRequested+file.getName();
@@ -264,5 +263,26 @@ public class Utils{
 			strReturn = null;
 		}
 		return strReturn;
+	}
+	
+	public String filterResource(String fileRequested) {
+		String strReturn = null;
+		try {
+			int fileFilteredTypeLocaltion = fileRequested.indexOf("?");
+			String fileFiltedredType = fileRequested.substring(0,fileFilteredTypeLocaltion);
+			String fileFiltered =  getContentType(fileFiltedredType);
+			if(fileFiltered.equals("text/javascript") || fileFiltered.equals("text/css")) 
+				strReturn = fileFiltedredType;
+			
+		}catch (Exception e) {
+			return null;
+		}
+		return strReturn;
+	}
+	
+	public String filterContentType(String fileRequested) {
+		String filted = null;
+		filted = getContentType(fileRequested.substring(0,fileRequested.indexOf("?")));
+		return filted;
 	}
 }

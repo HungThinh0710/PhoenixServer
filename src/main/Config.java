@@ -8,8 +8,8 @@ import org.ini4j.Ini;
 
 public class Config {
 	public static final File ROOT_DIRECTORY = new File(".");
-	public static final String DEFAULT_FILE = "default.html";
-	public static final String FILE_NOT_FOUND = "404.html";
+	public static final String DEFAULT_FILE = "default_html\\default.html";
+	public static final String FILE_NOT_FOUND = "default_html\\404.html";
 	public static final String METHOD_IS_NOT_SUPPORTED = "method_not_supported.html";
 	public static final String CONFIG_INI_PSERVER_FILE_NAME = "cfg_p.ini";
 	protected static final String CURRENT_USER_HOME_DIR = System.getProperty("user.home");
@@ -29,6 +29,11 @@ public class Config {
 	//MYSQL CONFIG
 	public static final File MYSQL_DIR = new File("/mysql");
 	public static final String MYSQL_CONFIG_FILE = "D:\\Eclipse_newgen\\PhoenixServer\\mysql\\bin\\my.ini";
+	
+	
+	//ROOT_RESOURCE CONFIG
+	public static final File RESOURCE_PATH = new File("D:\\Eclipse_newgen\\PhoenixServer\\");
+	
 	
 	public static final int PORT = 80;
 	// verbose mode
@@ -69,12 +74,15 @@ public class Config {
 		
 	}
 	
-	protected static void createINIConfigrationFile(){
+	public static void createINIConfigrationFile(){
 		try {
 			initialConfigFolder();
 			File iniFile = new File(INI_FOLDER_PATH+CONFIG_INI_PSERVER_FILE_NAME);
 			if(!iniFile.isFile()){
-				if(iniFile.createNewFile()) System.out.println("CONFIG::[Created cfg_p.ini]");
+				if(iniFile.createNewFile()) {
+					System.out.println("CONFIG::[Created cfg_p.ini]");
+					restoreDefaultCfgData();
+				}
 				else System.out.println("CONFIG::[CAN NOT CREATE cfg_p.ini FILE]");
 			}
 			else 

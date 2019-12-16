@@ -21,9 +21,8 @@ public class ThreadServer extends Thread{
 	private Config config;
 	private Socket connect;
 	private Utils utils;
-	public boolean isStarted;
+	private boolean openDefault = false;
 	public ThreadServer() {
-		isStarted = false;
 	}
 	
 	public ThreadServer(Socket connect) {
@@ -41,7 +40,6 @@ public class ThreadServer extends Thread{
 		BufferedReader in = null; PrintWriter out = null; BufferedOutputStream dataOut = null;
 		DataInputStream in2 = null;
 		String fileRequested = null;
-		this.isStarted = true;
 		try {
 			//Initial Utils 
 			utils = new Utils();
@@ -71,7 +69,14 @@ public class ThreadServer extends Thread{
 				fileRequested = fileRouted;
 			System.out.println("requested_now_second " + fileRequested);
 			System.out.println("file return " + fileRouted);
-
+			
+			
+			//TEST_?_HANDLE
+			String fileFilteredResource = utils.filterResource(fileRequested);
+			if(fileFilteredResource != null) {
+				fileRequested = fileFilteredResource;
+				System.out.println("After_refil? " + fileFilteredResource);
+			}
 			
 			
 //			String fileRouted = utils.routingDefaultTypeFile(fileRequested);
@@ -106,102 +111,40 @@ public class ThreadServer extends Thread{
 			} else {
 				// GET or HEAD method
 				if (fileRequested.endsWith("/")) {
-					fileRequested += config.DEFAULT_FILE;
+					System.out.println("Khongtimthayyyyyyyyyyyyy");
+					fileRequested = config.DEFAULT_FILE;
+					openDefault = true;
 				}
 				
-				File file = new File(config.ROOT_DIRECTORY, fileRequested);
+//				File file = new File(config.ROOT_DIRECTORY, fileRequested);
+				File file;
+				if(openDefault) {
+					file = new File(config.RESOURCE_PATH, fileRequested);
+					openDefault=false;
+				}
+				else {
+					file = new File(config.getPathRootPServerINI(), fileRequested);
+				}
+//				file = new File(config.getPathRootPServerINI(), fileRequested);
+				System.out.println("SSS_root:"+file.getAbsolutePath());
 				int fileLength = (int) file.length();
 				
 				
 				String content = utils.getContentType(fileRequested);
-				
+
 				
 				if (method.equals("GET")) { // GET method so we return content
 //					if(content.equals("text/html")) {
-					if(fileRequested.endsWith(".php")) {
+					if(fileRequested.endsWith(".php") || fileRequested.contains(".php")) {
 						 try {
-////							    ExecutePHPFile php = new ExecutePHPFile();
-////							    int phpLength = php.getPHPLength(fileRequested);
-////							    byte [] phpData = php.executePHP(fileRequested);
-//							 StringBuilder output = new StringBuilder();
-//							    byte[] phpData = null ;
-//							    int phpLength = 0;
-//							    try {
-//									String line;
-//
-////								    filePHPData = output.toString().getBytes();
-//									
-//									
-//									String fileRequestedFiltedSplash = fileRequested.replace("/", "\\");
-////									String cmdExecPhp = "cmd /c D: cd D:\\Eclipse_newgen\\PhoenixServer\\ && php -f "+fileRequestedFiltedSplash;
-//									String cmdExecPhp = "cmd /c D: && cd D:\\Eclipse_newgen\\PhoenixServer\\phpmyadmin && php index.php";
-//									Process p = Runtime.getRuntime().exec(new String[]{"p","D:\\Eclipse_newgen\\PhoenixServer\\phpmyadmin\\index.php", "-m", "2"});
-////									Process p = Runtime.getRuntime().exec(cmdExecPhp);
-//									System.out.println(cmdExecPhp);
-//									p.waitFor();
-//									BufferedReader inputPHP = new BufferedReader (new InputStreamReader(p.getInputStream()));
-//									while ((line = inputPHP.readLine()) != null) {
-//										System.out.println(inputPHP.readLine());
-//										output.append(line);
-//									}
-//									inputPHP.close();
-//									
-//									System.out.println(output.toString());
-//
-//							        
-//						    	}
-//							    catch (Exception err) {
-//							    	err.printStackTrace();
-//							    }
-							 StringBuilder outPHPData = new StringBuilder();
+							    ExecutePHPFile php = new ExecutePHPFile();
+							    StringBuilder getData = new StringBuilder();
+							    getData = php.executePHP(fileRequested);
+							    
+							    int phpLength = getData.toString().length();
+							    byte [] phpData = new byte [phpLength];
+							    phpData = getData.toString().getBytes();
 
-							 try {
-						            /* Create process */
-						            Process p = Runtime.getRuntime().exec("cmd /c D: && cd D:\\Eclipse_newgen\\PhoenixServer\\phpmyadmin && php -f index.php");
-
-						            /* Get OuputStream */
-						            PrintWriter writer = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(p.getOutputStream())), true);
-						            
-						            /* Read the output of command prompt */
-						            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-						            String line = reader.readLine();
-						            /* Read upto end of execution */
-						            while (line != null) {
-						                /* Pass the value to command prompt/user input */
-						                writer.println("");
-						                System.out.println(line);
-						                line = reader.readLine();
-						                outPHPData.append(reader.readLine());
-						            }
-						            /* The stream obtains data from the standard output stream of the process represented by this Process object. */
-						            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-						            /* The stream obtains data from the error output stream of the process represented by this Process object. */
-						            BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-						            System.err.println(stdInput);
-						            System.err.println(stdError);
-						            System.err.println(outPHPData.length());
-						            String Input;
-						            while ((Input = stdInput.readLine()) != null) {
-						                System.out.println(Input);
-						            }            
-						            
-						            String Error;
-						            while ((Error = stdError.readLine()) != null) {
-						                System.out.println(Error);
-						            }
-						            
-						        } catch (Exception e) {
-						            e.printStackTrace();
-						        }
-							 
-							 
-							 
-							 
-							 	int phpLength = outPHPData.length();
-							 	byte [] phpData = new byte [outPHPData.length()];
-							 	phpData = outPHPData.toString().getBytes();
-							 
-							 
 						        out.println("HTTP/1.1 200 OK");
 								out.println("Server: PServer from Hung Thinh - SICT: v1.0");
 								out.println("Date: " + new Date());

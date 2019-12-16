@@ -308,6 +308,10 @@ public class Launcher<V> extends JFrame {
 		txtConsole.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		txtConsole.setBounds(20, 266, 785, 251);
 		contentPane.add(txtConsole);
+		initResource();
+	}
+	private void initResource() {
+		Config.createINIConfigrationFile();
 	}
 	
 	
