@@ -95,12 +95,12 @@ public class Launcher<V> extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Modules", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(20, 53, 742, 203);
+		panel.setBounds(20, 53, 742, 153);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
 		JPanel panelModule = new JPanel();
-		panelModule.setBounds(10, 10, 105, 183);
+		panelModule.setBounds(10, 10, 105, 132);
 		panel.add(panelModule);
 		panelModule.setLayout(null);
 		
@@ -124,15 +124,9 @@ public class Launcher<V> extends JFrame {
 		lblMySql.setBounds(10, 91, 85, 13);
 		panelModule.add(lblMySql);
 		
-		JLabel lblTomcat = new JLabel("Tomcat");
-		lblTomcat.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTomcat.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblTomcat.setBounds(10, 136, 85, 13);
-		panelModule.add(lblTomcat);
-		
 		JPanel panel_PID = new JPanel();
 		panel_PID.setLayout(null);
-		panel_PID.setBounds(138, 10, 105, 183);
+		panel_PID.setBounds(138, 10, 105, 132);
 		panel.add(panel_PID);
 		
 		JLabel lblPIDs = new JLabel("PID(s)");
@@ -162,7 +156,7 @@ public class Launcher<V> extends JFrame {
 		
 		JPanel panelPort = new JPanel();
 		panelPort.setLayout(null);
-		panelPort.setBounds(265, 10, 105, 183);
+		panelPort.setBounds(265, 10, 105, 132);
 		panel.add(panelPort);
 		
 		JLabel lblPort = new JLabel("Port(s)");
@@ -183,14 +177,8 @@ public class Launcher<V> extends JFrame {
 		lblPortOfMySQL.setBounds(10, 91, 85, 13);
 		panelPort.add(lblPortOfMySQL);
 		
-		JLabel lblPortOfTomcat = new JLabel("");
-		lblPortOfTomcat.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPortOfTomcat.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblPortOfTomcat.setBounds(10, 136, 85, 13);
-		panelPort.add(lblPortOfTomcat);
-		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(393, 10, 337, 183);
+		panel_1.setBounds(393, 10, 337, 132);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -271,33 +259,13 @@ public class Launcher<V> extends JFrame {
 		btnLogsMySQL.setBounds(259, 85, 69, 21);
 		panel_1.add(btnLogsMySQL);
 		
-		JButton button_4 = new JButton("Start");
-		button_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		button_4.setBounds(10, 135, 73, 21);
-		panel_1.add(button_4);
-		
-		JButton button_5 = new JButton("Access");
-		button_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		button_5.setBounds(93, 135, 73, 21);
-		panel_1.add(button_5);
-		
-		JButton button_6 = new JButton("Config");
-		button_6.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		button_6.setBounds(176, 135, 73, 21);
-		panel_1.add(button_6);
-		
-		JButton button_7 = new JButton("Logs");
-		button_7.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		button_7.setBounds(259, 135, 69, 21);
-		panel_1.add(button_7);
-		
 		JLabel lblActions = new JLabel("Actions");
 		lblActions.setHorizontalAlignment(SwingConstants.CENTER);
 		lblActions.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblActions.setBounds(10, 8, 85, 18);
 		panel_1.add(lblActions);
 		
-		JLabel lblPhoenixServerTitle = new JLabel("Phoenix Server v1.0.0");
+		JLabel lblPhoenixServerTitle = new JLabel("Phoenix Server v1.1.0");
 		lblPhoenixServerTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPhoenixServerTitle.setFont(new Font("Consolas", Font.PLAIN, 26));
 		lblPhoenixServerTitle.setBounds(82, 10, 528, 42);
@@ -306,7 +274,7 @@ public class Launcher<V> extends JFrame {
 		txtConsole = new JTextArea();
 		txtConsole.setEditable(false);
 		txtConsole.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		txtConsole.setBounds(20, 266, 785, 251);
+		txtConsole.setBounds(20, 216, 785, 310);
 		contentPane.add(txtConsole);
 		initResource();
 	}
