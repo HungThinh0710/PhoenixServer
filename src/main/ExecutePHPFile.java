@@ -47,7 +47,9 @@ public class ExecutePHPFile {
 
 		 try {
 	            /* Create process */
-			 	String filePathFilter  = detectPhpMyAdminUri(filePath);
+//			 	String filePathFilter  = detectPhpMyAdminUri(filePath);
+			 	String filePathFilter  = filePath;
+
 		 		String param, fileExeFinal;
 		 		String getParamAndFileExe[] = getFileExcuteAndParamPhp(fileRequested, fileExe);
 		 		
@@ -63,11 +65,21 @@ public class ExecutePHPFile {
 			 	}
 			 	else {
 //			 		Process p = Runtime.getRuntime().exec("cmd /c D: && cd D:\\Eclipse_newgen\\PhoenixServer\\phpmyadmin && php -f index.php");
-		            String command = "cmd /c C: && cd "+Config.DEFAULT_ROOT_PATH+filePath+" && php -f"+getParamAndFileExe[0] + " "+getParamAndFileExe[1];
-			 		p = Runtime.getRuntime().exec(command);
+//		            String command = "cmd /c C: && cd "+Config.DEFAULT_ROOT_PATH+filePath+" && php -f"+getParamAndFileExe[0] + " "+getParamAndFileExe[1];
+		            String command = "cmd /c C: && php-cgi.exe -q "+Config.DEFAULT_ROOT_PATH+filePath+getParamAndFileExe[0] + " "+getParamAndFileExe[1];
+		            
+			 		
+			 		proc = Runtime.getRuntime().exec(command);
 			 		 System.out.println("__command_wo:"+command);
 			 	}
 			 	
+//		 		//DEBUG HOT
+////		 		String command = "cmd /c C: && cd "+Config.DEFAULT_ROOT_PATH+filePath+" && php -f "+getParamAndFileExe[0] + " "+getParamAndFileExe[1];
+//		 		String command = "cmd /c C: && cd "+Config.DEFAULT_ROOT_PATH+filePath+" && php-cgi.exe -f "+  Config.DEFAULT_ROOT_PATH+filePath+ getParamAndFileExe[0] + " "+getParamAndFileExe[1];
+//		 		proc = Runtime.getRuntime().exec(command);
+//		 		 System.out.println("__command_wo:"+command);
+		 		
+		 		
 			 	 BufferedReader stdInput = new BufferedReader(new 
 		                 InputStreamReader(proc.getInputStream()));
 	

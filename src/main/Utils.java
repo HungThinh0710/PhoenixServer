@@ -110,7 +110,7 @@ public class Utils{
 			return "image/png";
 		if(fileRequested.endsWith(".pdf"))
 			return "application/pdf";
-		if(fileRequested.endsWith(".php")) //PHP in HERE
+		if(fileRequested.endsWith(".php") || fileRequested.contains(".php?")) //PHP in HERE
 			return "text/html";
 		if(fileRequested.endsWith(".php5"))
 			return "text/php";
